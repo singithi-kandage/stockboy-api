@@ -1,0 +1,21 @@
+{
+  "name": "stocboy-api",
+  "version": "1.0.0",
+  "description": "API for the Stock Boy project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Singithi Kandage",
+  "license": "ISC",
+  "dependencies": {
+    "amazon-cognito-identity-js": "^3.2.0",
+    "aws-sdk": "^2.585.0",
+    "encodeurl": "^1.0.2",
+    "jsonwebtoken": "^8.5.1",
+    "jwk-to-pem": "^2.0.2",
+    "node-fetch": "^2.6.0",
+    "request": "^2.88.0",
+    "serverless-cognito-add-custom-attributes": "^0.3.0"
+  }
+}
