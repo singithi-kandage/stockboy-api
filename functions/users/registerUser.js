@@ -17,15 +17,21 @@ const poolData = {
 
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
-module.exports.registerUser = async event => {
-  const {
-    username,
-    email,
-    password,
-    firstName,
-    lastName,
-    isVendor
-  } = JSON.parse(event.body);
+module.exports.registerUser = event => {
+  const { email, password, firstName, lastName, isVendor } = JSON.parse(
+    event.body
+  );
+
+  const params = {
+    TableName: "user",
+    Item: {
+      userId: generateUUID(),
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+      isVendor: isVendor
+    }
+  };
 
   var attributeList = [];
   attributeList.push(
@@ -53,37 +59,23 @@ module.exports.registerUser = async event => {
     })
   );
 
-  userPool.signUp(username, password, attributeList, null, function(
-    err,
-    result
-  ) {
-    if (err) {
-      console.log(err);
-      return;
-    }
-    cognitoUser = result.user;
-    console.log("user name is " + cognitoUser.getUsername());
-  });
+  userPool.signUp(email, password, attributeList, null, onSignUp);
+  addUser(params);
+};
 
-  var userData = {
-    Username: username,
-    Pool: userPool
-  };
+const onSignUp = (err, userData) => {
+  if (err) {
+    console.log(err);
+    return;
+  } else {
+    console.log("userData: " + userData);
+    cognitoUser = userData.user;
+    // Add to user table
+    addUser();
+  }
+};
 
-  var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
-
-  const params = {
-    TableName: "user", // The name of your DynamoDB table
-    Item: {
-      userId: generateUUID(),
-      username: cognitoUser.getUsername(),
-      email: email,
-      firstName: firstName,
-      lastName: lastName,
-      isVendor: isVendor
-    }
-  };
-
+const addUser = async params => {
   try {
     // Utilising the put method to insert an item into the table (https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GettingStarted.NodeJs.03.html#GettingStarted.NodeJs.03.01)
     const data = await documentClient.put(params).promise();

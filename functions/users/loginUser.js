@@ -1,5 +1,4 @@
 const AmazonCognitoIdentity = require("amazon-cognito-identity-js");
-const AWS = require("aws-sdk");
 global.fetch = require("node-fetch");
 
 // User pool instantiation

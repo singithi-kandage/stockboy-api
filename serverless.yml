@@ -49,8 +49,8 @@ provider:
     MAPQUEST_GEOCODING_TOKEN: "D68gsHRDpqx7cn3i8fJvoWzUx55N5d6e"
     MAPQUEST_GEOCODING_SECRET: "MBGjGEtTLPNRnj1O"
     USDA_FOOD_DATA_CENTRE_TOKEN: "5UGYYLbuiJwiGy0ORFHzUj8zFfWZKExWPDNMubfJ"
-#    AWS_COGNITO_POOL_ID:  ca-central-1_TXbgPtPRG
-#    AWS_COGNITO_CLIENT_ID: 403arphk7skderch1sssaesfgn
+    AWS_COGNITO_POOL_ID: ca-central-1_LQVujfodU
+    AWS_COGNITO_CLIENT_ID: 1kkpe5jqemlolio1or8b7c7vbj
 
 # you can add packaging information here
 #package:
@@ -91,12 +91,21 @@ functions:
           method: post
   registerUser:
     handler: ./functions/users/registerUser.registerUser
-    # environment:
-    #   AWS_COGNITO_POOL_ID: ca-central-1_TXbgPtPRG
-    #   AWS_COGNITO_CLIENT_ID: 403arphk7skderch1sssaesfgn
+    environment:
+      AWS_COGNITO_POOL_ID: ca-central-1_LQVujfodU
+      AWS_COGNITO_CLIENT_ID: 1kkpe5jqemlolio1or8b7c7vbj
     events:
       - http:
           path: users/register
+          method: post
+  confirmUser:
+    handler: ./functions/users/confirmUser.confirmUser
+    environment:
+      AWS_COGNITO_POOL_ID: ca-central-1_LQVujfodU
+      AWS_COGNITO_CLIENT_ID: 1kkpe5jqemlolio1or8b7c7vbj
+    events:
+      - http:
+          path: users/confirm-user
           method: post
 
   # Vendor endpoints
